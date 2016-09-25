@@ -37,6 +37,12 @@ let fakeData3 = {
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next()
+})
+
 mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database) => {
   if (err) {
     console.log(err)
@@ -66,7 +72,7 @@ app.get('/getuserdata', (req, res) => {
   res.send('Hammock.')
 })
 
-app.get('/getLiveData.json', (req, res) => {
+app.get('/getLiveData', (req, res) => {
   db.collection('users').find({}, (err, cursor) => {
     cursor.toArray((err, data)=> {
       res.send(data)

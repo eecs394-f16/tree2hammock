@@ -51,6 +51,12 @@ var fakeData3 = {
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 app.use(_bodyParser2.default.json());
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 _mongodb2.default.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   if (err) {
     console.log(err);
@@ -80,7 +86,7 @@ app.get('/getuserdata', function (req, res) {
   res.send('Hammock.');
 });
 
-app.get('/getLiveData.json?', function (req, res) {
+app.get('/getLiveData', function (req, res) {
   db.collection('users').find({}, function (err, cursor) {
     cursor.toArray(function (err, data) {
       res.send(data);
