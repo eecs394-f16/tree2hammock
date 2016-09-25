@@ -80,10 +80,9 @@ app.get('/getuserdata', function (req, res) {
   res.send('Hammock.');
 });
 
-app.get('/getLiveData', function (req, res) {
+app.get('/getLiveData.json?', function (req, res) {
   db.collection('users').find({}, function (err, cursor) {
     cursor.toArray(function (err, data) {
-      console.log(data);
       res.send(data);
     });
   });

@@ -66,7 +66,7 @@ app.get('/getuserdata', (req, res) => {
   res.send('Hammock.')
 })
 
-app.get('/getLiveData', (req, res) => {
+app.get('/getLiveData.json', (req, res) => {
   db.collection('users').find({}, (err, cursor) => {
     cursor.toArray((err, data)=> {
       res.send(data)
