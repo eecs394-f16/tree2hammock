@@ -1,0 +1,28 @@
+let fakeData0 = {
+  name: 'Collin',
+  location: 'Lakefill',
+  start_time: '2:00pm',
+  end_time: '4:00pm',
+  event: 'Play catch'
+}
+let fakeData1 = {
+  name: 'Agam',
+  location: 'Deering Library',
+  start_time: '8:00pm',
+  end_time: '10:00pm',
+  event: 'Study'
+}
+let fakeData2 = {
+  name: 'Joon',
+  location: 'Ryan Field',
+  start_time: '5:00pm',
+  end_time: '7:00pm',
+  event: 'Practice Saxophone'
+}
+let fakeData3 = {
+  name: 'Aagam',
+  location: 'Basement',
+  start_time: '2:00am',
+  end_time: '5:00am',
+  event: 'Graduate Student Things.'
+}

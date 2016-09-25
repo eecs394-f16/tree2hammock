@@ -20,34 +20,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var app = (0, _express2.default)();
 var db = void 0;
-var fakeData0 = {
-  name: 'Collin',
-  location: 'Lakefill',
-  start_time: '2:00pm',
-  end_time: '4:00pm',
-  event: 'Play catch'
-};
-var fakeData1 = {
-  name: 'Agam',
-  location: 'Deering Library',
-  start_time: '8:00pm',
-  end_time: '10:00pm',
-  event: 'Study'
-};
-var fakeData2 = {
-  name: 'Joon',
-  location: 'Ryan Field',
-  start_time: '5:00pm',
-  end_time: '7:00pm',
-  event: 'Practice Saxophone'
-};
-var fakeData3 = {
-  name: 'Aagam',
-  location: 'Basement',
-  start_time: '2:00am',
-  end_time: '5:00am',
-  event: 'Graduate Student Things.'
-};
+var EVENTS_COLLECTION = 'users'; // Change this to events
+
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 app.use(_bodyParser2.default.json());
 
@@ -78,18 +52,28 @@ app.get('/', function (req, res) {
   res.send('Hammock.');
 });
 
-app.get('/getuserdata', function (req, res) {
-  db.collection('users').insertOne({ data: fakeData0 });
-  db.collection('users').insertOne({ data: fakeData1 });
-  db.collection('users').insertOne({ data: fakeData2 });
-  db.collection('users').insertOne({ data: fakeData3 });
-  res.send('Hammock.');
+app.get('/getLiveData', function (req, res) {
+  db.collection(EVENTS_COLLECTION).find({}, function (err, cursor) {
+    cursor.toArray(function (err, data) {
+      if (!err) {
+        res.status(200).send(data);
+      } else {
+        res.status(503);
+      }
+    });
+  });
 });
 
-app.get('/getLiveData', function (req, res) {
-  db.collection('users').find({}, function (err, cursor) {
-    cursor.toArray(function (err, data) {
-      res.send(data);
-    });
+app.post('/addNewEvent', function (req, res) {
+  var data = {
+    test: 'hi'
+  };
+
+  db.collection(EVENTS_COLLECTION).insertOne(data, function (err, result) {
+    if (!err) {
+      res.status(200).send('Success');
+    } else {
+      res.status(503);
+    }
   });
 });
