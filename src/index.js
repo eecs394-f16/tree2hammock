@@ -50,6 +50,8 @@ app.get('/getLiveEvents', (req, res) => {
 })
 
 app.post('/addNewEvent', (req, res) => {
+  let data = req.body
+
   db.collection(EVENTS_COLLECTION).insertOne(data, (err, result) => {
     if (!err) {
       res.status(200).send('Success')

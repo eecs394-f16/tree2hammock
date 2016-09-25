@@ -64,6 +64,8 @@ app.get('/getLiveEvents', function (req, res) {
 });
 
 app.post('/addNewEvent', function (req, res) {
+  var data = req.body;
+
   db.collection(EVENTS_COLLECTION).insertOne(data, function (err, result) {
     if (!err) {
       res.status(200).send('Success');
