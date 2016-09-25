@@ -34,7 +34,6 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, (err, database) => {
 })
 
 app.get('/', (req, res) => {
-  db.collection('users').insertOne({test:'hi'})
   res.send('Hammock.')
 })
 

@@ -48,7 +48,6 @@ _mongodb2.default.MongoClient.connect(process.env.MONGODB_URI, function (err, da
 });
 
 app.get('/', function (req, res) {
-  db.collection('users').insertOne({ test: 'hi' });
   res.send('Hammock.');
 });
 
