@@ -52,7 +52,7 @@ app.get('/', function (req, res) {
   res.send('Hammock.');
 });
 
-app.get('/getLiveData', function (req, res) {
+app.get('/getLiveEvents', function (req, res) {
   db.collection(EVENTS_COLLECTION).find({}, function (err, cursor) {
     cursor.toArray(function (err, data) {
       if (!err) {
@@ -65,10 +65,6 @@ app.get('/getLiveData', function (req, res) {
 });
 
 app.post('/addNewEvent', function (req, res) {
-  var data = {
-    test: 'hi'
-  };
-
   db.collection(EVENTS_COLLECTION).insertOne(data, function (err, result) {
     if (!err) {
       res.status(200).send('Success');
