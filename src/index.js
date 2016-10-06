@@ -80,7 +80,7 @@ app.delete('/deleteEvent', (req, res) => {
     return
   }
 
-  let event_id = req.body.event_id
+  let event_id = req.body._id
   let selector = {_id: mongodb.ObjectId(event_id)}
 
   db.collection(EVENTS_COLLECTION).remove(selector, (err, result) => {
