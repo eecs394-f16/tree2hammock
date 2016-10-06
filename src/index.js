@@ -38,25 +38,56 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getLiveEvents', (req, res) => {
+  let securityToken = req.query.securityToken
+  if (securityToken !== process.env.SECURITY_TOKEN) {
+    res.status(401).send('Invalid Security Token')
+    return
+  }
+
   db.collection(EVENTS_COLLECTION).find({}, (err, cursor) => {
     cursor.toArray((err, data)=> {
       if (!err) {
         res.status(200).send(data)
       } else {
-        res.status(503)
+        res.status(400)
       }
     })
   })
 })
 
 app.post('/addNewEvent', (req, res) => {
-  let data = req.body
+  let securityToken = req.body.security_token
+  if (securityToken !== process.env.SECURITY_TOKEN) {
+    res.status(401).send('Invalid Security Token')
+    return
+  }
 
-  db.collection(EVENTS_COLLECTION).insertOne(data, (err, result) => {
+  let data = req.body.data
+  console.log(data)
+  db.collection(EVENTS_COLLECTION).insertOne({data: data}, (err, result) => {
     if (!err) {
       res.status(200).send('Success')
     } else {
-      res.status(503)
+      res.status(400)
+    }
+  })
+})
+
+app.delete('/deleteEvent', (req, res) => {
+  let securityToken = req.body.security_token
+  if (securityToken !== process.env.SECURITY_TOKEN) {
+    res.status(401).send('Invalid Security Token')
+    return
+  }
+
+  let event_id = req.body.event_id
+  let selector = {_id: mongodb.ObjectId(event_id)}
+
+  db.collection(EVENTS_COLLECTION).remove(selector, (err, result) => {
+    if (!err) {
+      res.status(200).send('Success')
+    } else {
+      res.status(400).send('Failure')
     }
   })
 })

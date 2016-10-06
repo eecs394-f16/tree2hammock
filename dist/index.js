@@ -52,25 +52,56 @@ app.get('/', function (req, res) {
 });
 
 app.get('/getLiveEvents', function (req, res) {
+  var securityToken = req.query.securityToken;
+  if (securityToken !== process.env.SECURITY_TOKEN) {
+    res.status(401).send('Invalid Security Token');
+    return;
+  }
+
   db.collection(EVENTS_COLLECTION).find({}, function (err, cursor) {
     cursor.toArray(function (err, data) {
       if (!err) {
         res.status(200).send(data);
       } else {
-        res.status(503);
+        res.status(400);
       }
     });
   });
 });
 
 app.post('/addNewEvent', function (req, res) {
-  var data = req.body;
+  var securityToken = req.body.security_token;
+  if (securityToken !== process.env.SECURITY_TOKEN) {
+    res.status(401).send('Invalid Security Token');
+    return;
+  }
 
-  db.collection(EVENTS_COLLECTION).insertOne(data, function (err, result) {
+  var data = req.body.data;
+  console.log(data);
+  db.collection(EVENTS_COLLECTION).insertOne({ data: data }, function (err, result) {
     if (!err) {
       res.status(200).send('Success');
     } else {
-      res.status(503);
+      res.status(400);
+    }
+  });
+});
+
+app.delete('/deleteEvent', function (req, res) {
+  var securityToken = req.body.security_token;
+  if (securityToken !== process.env.SECURITY_TOKEN) {
+    res.status(401).send('Invalid Security Token');
+    return;
+  }
+
+  var event_id = req.body.event_id;
+  var selector = { _id: _mongodb2.default.ObjectId(event_id) };
+
+  db.collection(EVENTS_COLLECTION).remove(selector, function (err, result) {
+    if (!err) {
+      res.status(200).send('Success');
+    } else {
+      res.status(400).send('Failure');
     }
   });
 });
