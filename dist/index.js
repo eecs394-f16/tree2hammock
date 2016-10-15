@@ -52,11 +52,11 @@ app.get('/', function (req, res) {
 });
 
 app.get('/getLiveEvents', function (req, res) {
-  var securityToken = req.query.securityToken;
-  if (securityToken !== process.env.SECURITY_TOKEN) {
-    res.status(401).send('Invalid Security Token');
-    return;
-  }
+  // let securityToken = req.query.securityToken
+  // if (securityToken !== process.env.SECURITY_TOKEN) {
+  //   res.status(401).send('Invalid Security Token')
+  //   return
+  // }
 
   db.collection(EVENTS_COLLECTION).find({}, function (err, cursor) {
     cursor.toArray(function (err, data) {
@@ -70,11 +70,11 @@ app.get('/getLiveEvents', function (req, res) {
 });
 
 app.post('/addNewEvent', function (req, res) {
-  var securityToken = req.body.security_token;
-  if (securityToken !== process.env.SECURITY_TOKEN) {
-    res.status(401).send('Invalid Security Token');
-    return;
-  }
+  // let securityToken = req.body.security_token
+  // if (securityToken !== process.env.SECURITY_TOKEN) {
+  //   res.status(401).send('Invalid Security Token')
+  //   return
+  // }
 
   var data = req.body.data;
   console.log(data);
@@ -88,11 +88,11 @@ app.post('/addNewEvent', function (req, res) {
 });
 
 app.delete('/deleteEvent', function (req, res) {
-  var securityToken = req.body.security_token;
-  if (securityToken !== process.env.SECURITY_TOKEN) {
-    res.status(401).send('Invalid Security Token');
-    return;
-  }
+  // let securityToken = req.body.security_token
+  // if (securityToken !== process.env.SECURITY_TOKEN) {
+  //   res.status(401).send('Invalid Security Token')
+  //   return
+  // }
 
   var event_id = req.body._id;
   var selector = { _id: _mongodb2.default.ObjectId(event_id) };
@@ -108,11 +108,12 @@ app.delete('/deleteEvent', function (req, res) {
 
 var filterByActiveTime = function filterByActiveTime(data) {
   var len = data.length;
-
+  console.log(data);
   for (var i = 0; i < len; i++) {
     if (new Date(data[i].data.time.end) < new Date()) {
       data.splice(i, 1);
     }
   }
+  console.log(data);
   return data;
 };

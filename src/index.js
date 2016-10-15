@@ -63,7 +63,6 @@ app.post('/addNewEvent', (req, res) => {
   // }
 
   let data = req.body.data
-  console.log(data)
   db.collection(EVENTS_COLLECTION).insertOne({data: data}, (err, result) => {
     if (!err) {
       res.status(200).send('Success')
@@ -94,7 +93,6 @@ app.delete('/deleteEvent', (req, res) => {
 
 const filterByActiveTime = (data) => {
   const len = data.length
-
   for (let i = 0; i < len; i++) {
     if (new Date(data[i].data.time.end) < new Date()) {
       data.splice(i, 1)
