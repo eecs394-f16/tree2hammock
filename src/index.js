@@ -38,16 +38,16 @@ app.get('/', (req, res) => {
 })
 
 app.get('/getLiveEvents', (req, res) => {
-  let securityToken = req.query.securityToken
-  if (securityToken !== process.env.SECURITY_TOKEN) {
-    res.status(401).send('Invalid Security Token')
-    return
-  }
+  // let securityToken = req.query.securityToken
+  // if (securityToken !== process.env.SECURITY_TOKEN) {
+  //   res.status(401).send('Invalid Security Token')
+  //   return
+  // }
 
   db.collection(EVENTS_COLLECTION).find({}, (err, cursor) => {
     cursor.toArray((err, data)=> {
       if (!err) {
-        res.status(200).send(data)
+        res.status(200).send(filterByActiveTime(data))
       } else {
         res.status(400)
       }
@@ -56,11 +56,11 @@ app.get('/getLiveEvents', (req, res) => {
 })
 
 app.post('/addNewEvent', (req, res) => {
-  let securityToken = req.body.security_token
-  if (securityToken !== process.env.SECURITY_TOKEN) {
-    res.status(401).send('Invalid Security Token')
-    return
-  }
+  // let securityToken = req.body.security_token
+  // if (securityToken !== process.env.SECURITY_TOKEN) {
+  //   res.status(401).send('Invalid Security Token')
+  //   return
+  // }
 
   let data = req.body.data
   console.log(data)
@@ -74,11 +74,11 @@ app.post('/addNewEvent', (req, res) => {
 })
 
 app.delete('/deleteEvent', (req, res) => {
-  let securityToken = req.body.security_token
-  if (securityToken !== process.env.SECURITY_TOKEN) {
-    res.status(401).send('Invalid Security Token')
-    return
-  }
+  // let securityToken = req.body.security_token
+  // if (securityToken !== process.env.SECURITY_TOKEN) {
+  //   res.status(401).send('Invalid Security Token')
+  //   return
+  // }
 
   let event_id = req.body._id
   let selector = {_id: mongodb.ObjectId(event_id)}
@@ -91,3 +91,14 @@ app.delete('/deleteEvent', (req, res) => {
     }
   })
 })
+
+const filterByActiveTime = (data) => {
+  const len = data.length
+
+  for (let i = 0; i < len; i++) {
+    if (new Date(data[i].data.time.end) < new Date()) {
+      data.splice(i, 1)
+    }
+  }
+  return data
+}

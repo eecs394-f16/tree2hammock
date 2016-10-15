@@ -61,7 +61,7 @@ app.get('/getLiveEvents', function (req, res) {
   db.collection(EVENTS_COLLECTION).find({}, function (err, cursor) {
     cursor.toArray(function (err, data) {
       if (!err) {
-        res.status(200).send(data);
+        res.status(200).send(filterByActiveTime(data));
       } else {
         res.status(400);
       }
@@ -94,7 +94,7 @@ app.delete('/deleteEvent', function (req, res) {
     return;
   }
 
-  var event_id = req.body.event_id;
+  var event_id = req.body._id;
   var selector = { _id: _mongodb2.default.ObjectId(event_id) };
 
   db.collection(EVENTS_COLLECTION).remove(selector, function (err, result) {
@@ -105,3 +105,14 @@ app.delete('/deleteEvent', function (req, res) {
     }
   });
 });
+
+var filterByActiveTime = function filterByActiveTime(data) {
+  var len = data.length;
+
+  for (var i = 0; i < len; i++) {
+    if (new Date(data[i].data.time.end) < new Date()) {
+      data.splice(i, 1);
+    }
+  }
+  return data;
+};
