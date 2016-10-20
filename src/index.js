@@ -97,6 +97,6 @@ const filterByActiveTime = (data) => {
   data = data.filter((el) => {
     return (new Date(el.data.time.end) > new Date())
   })
-  
+
   return data
 }

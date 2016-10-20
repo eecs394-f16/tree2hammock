@@ -109,15 +109,8 @@ var filterByActiveTime = function filterByActiveTime(data) {
   var len = data.length;
 
   data = data.filter(function (el) {
-    return new Date(el.data.time.end) < new Date();
+    return new Date(el.data.time.end) > new Date();
   });
-  console.log(data);
-  // for (let i = 0; i < len; i++) {
-  //   console.log(i)
-  //   console.log(data[i])
-  //   if (new Date(data[0].data.time.end) < new Date()) {
-  //     data.splice(0, 1)
-  //   }
-  // }
+
   return data;
 };
