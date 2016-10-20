@@ -93,10 +93,10 @@ app.delete('/deleteEvent', (req, res) => {
 
 const filterByActiveTime = (data) => {
   const len = data.length
-  for (let i = 0; i < len; i++) {
-    if (new Date(data[i].data.time.end) < new Date()) {
-      data.splice(i, 1)
-    }
-  }
+
+  data = data.filter((el) => {
+    return (new Date(el.data.time.end) > new Date())
+  })
+  
   return data
 }
