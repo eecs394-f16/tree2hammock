@@ -45,7 +45,7 @@ app.get('/getLiveEvents', (req, res) => {
   // }
 
   db.collection(EVENTS_COLLECTION).find({}, (err, cursor) => {
-    cursor.toArray((err, data)=> {
+    cursor.toArray((err, data) => {
       if (!err) {
         res.status(200).send(filterByActiveTime(data))
       } else {
@@ -71,6 +71,32 @@ app.post('/addNewEvent', (req, res) => {
     }
   })
 })
+
+app.post('/addGoing', (req, res) => {
+  const event_id = mongodb.ObjectId(req.body._id);
+  const name = req.body.name;
+
+  // Find the event to which we want to add the person going
+  db.collection(EVENTS_COLLECTION).find({"_id": event_id}, (err, cursor) => {
+    cursor.toArray((err, data) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        const going_list = data[0].data.going;
+        // Add the new name to the list of people going
+        going_list.push(name);
+        // Replace the old list of people with the new one
+        db.collection(EVENTS_COLLECTION).update({"_id": event_id}, {$set: {"data.going": going_list}}, (err) => {
+          if (err) {
+            res.status(400);
+          } else {
+            res.status(200).send('Success');
+          }
+        });
+      }
+    });
+  });
+});
 
 app.delete('/deleteEvent', (req, res) => {
   // let securityToken = req.body.security_token

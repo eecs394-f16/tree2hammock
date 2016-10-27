@@ -86,6 +86,30 @@ app.post('/addNewEvent', function (req, res) {
   });
 });
 
+app.post('/addGoing', function (req, res) {
+  var event_id = _mongodb2.default.ObjectId(req.body._id);
+  var name = req.body.name;
+
+  db.collection(EVENTS_COLLECTION).find({ "_id": event_id }, function (err, cursor) {
+    cursor.toArray(function (err, data) {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        var going_list = data[0].data.going;
+        going_list.push(name);
+        console.log(going_list);
+        db.collection(EVENTS_COLLECTION).update({ "_id": event_id }, { $set: { "data.going": going_list } }, function (err) {
+          if (err) {
+            res.status(400);
+          } else {
+            res.status(200).send('Success');
+          }
+        });
+      }
+    });
+  });
+});
+
 app.delete('/deleteEvent', function (req, res) {
   // let securityToken = req.body.security_token
   // if (securityToken !== process.env.SECURITY_TOKEN) {
